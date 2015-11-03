@@ -71,12 +71,10 @@
 		if (typeof s.documentElement != 'undefined') {
 			// load from xml doc
 			svg.loadXmlDoc(ctx, s);
-		}
-		else if (s.substr(0,1) == '<') {
+		} else if (s.substr(0,1) == '<') {
 			// load from xml string
 			svg.loadXml(ctx, s);
-		}
-		else {
+		} else {
 			// load from url
 			svg.load(ctx, s);
 		}
@@ -230,25 +228,22 @@
 				xmlDoc.loadXml(xml, settings);
 				return xmlDoc;
 			}
-			else if (window.DOMParser)
-			{
+			if (window.DOMParser) {
 				var parser = new DOMParser();
 				return parser.parseFromString(xml, 'text/xml');
 			}
-			else
-			{
-				xml = xml.replace(/<!DOCTYPE svg[^>]*>/, '');
-				var xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
-				xmlDoc.async = 'false';
-				xmlDoc.loadXML(xml);
-				return xmlDoc;
-			}
+			xml = xml.replace(/<!DOCTYPE svg[^>]*>/, '');
+			var xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+			xmlDoc.async = 'false';
+			xmlDoc.loadXML(xml);
+			return xmlDoc;
 		};
 
 		svg.Property = function(name, value) {
 			this.name = name;
 			this.value = value;
 		};
+
 		svg.Property.prototype.getValue = function() {
 			return this.value;
 		};
@@ -729,8 +724,7 @@
 			refY = new svg.Property('refY', refY);
 			if (refX.hasValue() && refY.hasValue()) {
 				ctx.translate(-scaleMin * refX.toPixels('x'), -scaleMin * refY.toPixels('y'));
-			}
-			else {
+			} else {
 				// align
 				if (align.match(/^xMid/) && ((meetOrSlice == 'meet' && scaleMin == scaleY) || (meetOrSlice == 'slice' && scaleMax == scaleY))) ctx.translate(width / 2.0 - desiredWidth / 2.0, 0);
 				if (align.match(/YMid$/) && ((meetOrSlice == 'meet' && scaleMin == scaleX) || (meetOrSlice == 'slice' && scaleMax == scaleX))) ctx.translate(0, height / 2.0 - desiredHeight / 2.0);
@@ -813,12 +807,10 @@
 				if (this.style('mask').hasValue()) { // mask
 					var mask = this.style('mask').getDefinition();
 					if (mask != null) mask.apply(ctx, this);
-				}
-				else if (this.style('filter').hasValue()) { // filter
+				} else if (this.style('filter').hasValue()) { // filter
 					var filter = this.style('filter').getDefinition();
 					if (filter != null) filter.apply(ctx, this);
-				}
-				else {
+				} else {
 					this.setContext(ctx);
 					this.renderChildren(ctx);
 					this.clearContext(ctx);
@@ -924,8 +916,7 @@
 				if (this.style('fill').isUrlDefinition()) {
 					var fs = this.style('fill').getFillStyleDefinition(this, this.style('fill-opacity'));
 					if (fs != null) ctx.fillStyle = fs;
-				}
-				else if (this.style('fill').hasValue()) {
+				} else if (this.style('fill').hasValue()) {
 					var fillStyle = this.style('fill');
 					if (fillStyle.value == 'currentColor') fillStyle.value = this.style('color').value;
 					if (fillStyle.value != 'inherit') ctx.fillStyle = (fillStyle.value == 'none' ? 'rgba(0,0,0,0)' : fillStyle.value);
@@ -940,8 +931,7 @@
 				if (this.style('stroke').isUrlDefinition()) {
 					var fs = this.style('stroke').getFillStyleDefinition(this, this.style('stroke-opacity'));
 					if (fs != null) ctx.strokeStyle = fs;
-				}
-				else if (this.style('stroke').hasValue()) {
+				} else if (this.style('stroke').hasValue()) {
 					var strokeStyle = this.style('stroke');
 					if (strokeStyle.value == 'currentColor') strokeStyle.value = this.style('color').value;
 					if (strokeStyle.value != 'inherit') ctx.strokeStyle = (strokeStyle.value == 'none' ? 'rgba(0,0,0,0)' : strokeStyle.value);
@@ -1334,22 +1324,7 @@
 				};
 
 				this.isRelativeCommand = function() {
-					switch(this.command)
-					{
-					case 'm':
-					case 'l':
-					case 'h':
-					case 'v':
-					case 'c':
-					case 's':
-					case 'q':
-					case 't':
-					case 'a':
-					case 'z':
-						return true;
-						break;
-					}
-					return false;
+					return 'mlhvcsqtaz'.indexOf(this.command) !== -1;
 				};
 
 				this.getToken = function() {
@@ -1730,13 +1705,13 @@
 			this.getGradient = function() {
 				// OVERRIDE ME!
 			};
-			
+
 			this.gradientUnits = function () {
 				return this.attribute('gradientUnits').valueOrDefault('objectBoundingBox');
 			};
-			
+
 			this.attributesToInherit = ['gradientUnits'];
-			
+
 			this.inheritStopContainer = function (stopsContainer) {
 				for (var i=0; i<this.attributesToInherit.length; i++) {
 					var attributeToInherit = this.attributesToInherit[i];
@@ -1950,13 +1925,11 @@
 					if (this.attribute('repeatCount').value == 'indefinite'
 						|| this.attribute('repeatDur').value == 'indefinite') {
 						this.duration = 0.0;
-					}
-					else if (this.attribute('fill').valueOrDefault('remove') == 'freeze' && !this.frozen) {
+					} else if (this.attribute('fill').valueOrDefault('remove') == 'freeze' && !this.frozen) {
 						this.frozen = true;
 						this.parent.animationFrozen = true;
 						this.parent.animationFrozenValue = this.getProperty().value;
-					}
-					else if (this.attribute('fill').valueOrDefault('remove') == 'remove' && !this.removed) {
+					} else if (this.attribute('fill').valueOrDefault('remove') == 'remove' && !this.removed) {
 						this.removed = true;
 						this.getProperty().value = this.parent.animationFrozen ? this.parent.animationFrozenValue : this.initialValue;
 						return true;
@@ -1997,8 +1970,7 @@
 					ret.from = new svg.Property('from', parseFloat(this.values.value[lb]));
 					ret.to = new svg.Property('to', parseFloat(this.values.value[ub]));
 					ret.progress = (p - lb) / (ub - lb);
-				}
-				else {
+				} else {
 					ret.from = this.from;
 					ret.to = this.to;
 				}
@@ -2183,8 +2155,7 @@
 				if (child.attribute('x').hasValue()) {
 					child.x = child.attribute('x').toPixels('x') + parent.getAnchorDelta(ctx, parent, i);
 					if (child.attribute('dx').hasValue()) child.x += child.attribute('dx').toPixels('x');
-				}
-				else {
+				} else {
 					if (child.attribute('dx').hasValue()) parent.x += child.attribute('dx').toPixels('x');
 					child.x = parent.x;
 				}
@@ -2193,8 +2164,7 @@
 				if (child.attribute('y').hasValue()) {
 					child.y = child.attribute('y').toPixels('y');
 					if (child.attribute('dy').hasValue()) child.y += child.attribute('dy').toPixels('y');
-				}
-				else {
+				} else {
 					if (child.attribute('dy').hasValue()) parent.y += child.attribute('dy').toPixels('y');
 					child.y = parent.y;
 				}
@@ -2226,8 +2196,7 @@
 						glyph = font.glyphs[c][arabicForm];
 						if (glyph == null && font.glyphs[c].type == 'glyph') glyph = font.glyphs[c];
 					}
-				}
-				else {
+				} else {
 					glyph = font.glyphs[c];
 				}
 				if (glyph == null) glyph = font.missingGlyph;
@@ -2361,8 +2330,7 @@
 					this.baseRenderChildren(ctx);
 					var fontSize = new svg.Property('fontSize', svg.Font.Parse(svg.ctx.font).fontSize);
 					svg.Mouse.checkBoundingBox(this, new svg.BoundingBox(this.x, this.y - fontSize.toPixels('y'), this.x + this.measureText(ctx), this.y));
-				}
-				else if (this.children.length > 0) {
+				} else if (this.children.length > 0) {
 					// render as temporary group
 					var g = new svg.Element.g();
 					g.children = this.children;
@@ -2399,8 +2367,7 @@
 				this.img.onload = function() { self.loaded = true; };
 				this.img.onerror = function() { svg.log('ERROR: image "' + href + '" not found'); self.loaded = true; };
 				this.img.src = href;
-			}
-			else {
+			} else {
 				this.img = svg.ajax(href);
 				this.loaded = true;
 			}
@@ -2416,8 +2383,7 @@
 				ctx.save();
 				if (isSvg) {
 					ctx.drawSvg(this.img, x, y, width, height);
-				}
-				else {
+				} else {
 					ctx.translate(x, y);
 					svg.AspectRatio(ctx,
 									this.attribute('preserveAspectRatio').value,
@@ -2846,8 +2812,7 @@
 			var e = null;
 			if (typeof svg.Element[className] != 'undefined') {
 				e = new svg.Element[className](node);
-			}
-			else {
+			} else {
 				e = new svg.Element.MISSING(node);
 			}
 
